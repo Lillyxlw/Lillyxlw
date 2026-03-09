@@ -1,0 +1,56 @@
+---
+title: "Merge dataset of respondent list"
+output: html_document
+date: "2025-11-05"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages ("readxl")
+install.packages ("tidyverse")
+install.packages ("dplyr")
+install.packages ("table1")
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(table1)
+```
+
+```{r}
+full_list <- read_excel("/Users/liwei.x/Desktop/R/Respondent type/Final-abstract-submissions.xlsx")
+check_list1 <- read_excel("/Users/liwei.x/Desktop/R/Respondent type/Submission notices_Jul16.xlsx", sheet = 1)
+check_list2 <- read_excel("/Users/liwei.x/Desktop/R/Respondent type/Submission notices_Jul16.xlsx",sheet = 2)
+
+
+```
+
+
+
+```{r}
+merged_data1 <- full_list %>%
+  left_join(check_list1, by = "Full name")
+
+clean_data1 <- merged_data1 %>%
+  filter(!is.na(N.y))
+
+merged_data2 <- merged_data1 %>%
+  left_join(check_list2, by = "Full name")
+
+
+clean_data2 <- merged_data2 %>%
+  filter(!`Full name` %in% c("Aloysius Odii", "Angel Singh", "Hanim Tesfaye", "Hiwot Achamyeleh", "Kiara Lee", "Krishna Hari Shrestha", "Mary Politi", "	
+Mia Vogel", "Michela Meregaglia", "Nathan Shuftan", "VIJAY KUMAR", "THI KIM DUNG NGUYEN"))
+
+
+table(clean_data1$"Primary Area of Expertise")
+table(clean_data2$"Primary Area of Expertise")
+
+
+
+```
+
+## R Markdown
+
