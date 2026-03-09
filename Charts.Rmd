@@ -1,0 +1,968 @@
+---
+title: "Grant charts"
+output: html_document
+date: "2025-12-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# install.packages("ggplot2")  # run once if needed
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+
+```
+
+```{r}
+# Replace these numbers with YOUR odds ratios & CIs
+charta <- data.frame(
+  label = c("High income",
+            "High education",
+            "Urban",
+            "Under 30 years",
+            "Female"),
+  or  = c(0.6294642,
+          0.6493108,
+          1.022839,
+          1.045678,
+          1.0167),
+  
+  lcl = c(0.5337256,
+          0.5642022,
+          0.861059,
+          0.8958829,
+          0.8960449),
+  
+  ucl = c(0.7423762,
+          0.7472606,
+          1.215077,
+          1.216852,
+          1.160595)
+)
+
+# make factor so they appear top-to-bottom like the Lancet figure
+charta$label <- factor(charta$label,
+                       levels = rev(charta$label))
+
+
+p_a <- ggplot(charta, aes(x = or, y = label)) +
+  geom_errorbarh(aes(xmin = lcl, xmax = ucl), height = 0.2, size = 0.5, color = "#00A5B5") +
+  geom_point(size = 2, shape = 23, fill = "#00A5B5", color = "#00A5B5", stroke = 0) +
+  geom_vline(xintercept = 1, linetype = "dashed", size = 0.8) +
+  scale_x_log10(
+    breaks = c(0.5, 0.75, 1, 1.25, 1.5),
+    limits = c(0.5, 1.5),
+    labels = c("0.50","0.75","1.0","1.25","1.50"),
+    expand = c(0.02, 0.02)
+  ) +
+  labs(
+    x = "Odds ratio (95% CI)",
+    y = NULL,
+    title = "Quality of public system rated highly"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    ### Text ###
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    axis.text.y = element_text(hjust = 1),
+
+    ### No grid ###
+    panel.grid = element_blank(),
+
+    ### LANCET AXIS STYLE ###
+    # Thick bottom axis line
+    axis.line.x = element_line(color = "black", size = 0.5),
+    # Thick left axis line
+    axis.line.y = element_line(color = "black", size = 0.5),
+
+    ### Tick marks ###
+    axis.ticks = element_line(color = "black", size = 1),
+    axis.ticks.length = unit(4, "pt"),   # length like the journal
+
+    ### Title centered ###
+    plot.title = element_text(hjust = 0.5, family = "Times", face = "bold")
+  )
+
+p_a
+
+ggsave("chart1.png", p_a, width = 5, height = 8, dpi = 300, units = "in")
+
+
+```
+
+```{r}
+# Replace these numbers with YOUR odds ratios & CIs
+chartb <- data.frame(
+  label = c("High income-USA",
+            "High education-USA",
+            "Urban living-USA",
+            "Under 30 years-USA",
+            "Female-USA"),
+  or  = c(1.116836,   
+          0.9232374,
+          0.9984614,  
+          0.6359958, 
+          1.004223), 
+  lcl = c(0.9589398,
+          0.8053493,
+          0.8470579,
+          0.5490740,
+          0.8847519),
+  ucl = c(1.300731,
+          1.058382,
+          1.176927,
+          0.7366779,
+          1.139828)
+)
+
+# make factor so they appear top-to-bottom like the Lancet figure
+chartb$label <- factor(chartb$label,
+                       levels = rev(chartb$label))
+
+
+p_b <- ggplot(chartb, aes(x = or, y = label)) +
+  geom_errorbarh(aes(xmin = lcl, xmax = ucl), height = 0.2, size = 0.5, color = "#76B041") +
+  geom_point(size = 2, shape = 23, fill = "#76B041", color = "#76B041", stroke = 0) +
+  geom_vline(xintercept = 1, linetype = "dashed", size = 0.8) +
+  scale_x_log10(
+    breaks = c(0.5, 0.75, 1, 1.25, 1.5),
+    limits = c(0.5, 1.5),
+    labels = c("0.50","0.75","1.0","1.25","1.50"),
+    expand = c(0.02, 0.02)
+  ) +
+  labs(
+    x = "Odds ratio (95% CI)",
+    y = NULL,
+    title = "Quality of private system rated highly"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    ### Text ###
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    axis.text.y = element_blank(),
+
+    ### No grid ###
+    panel.grid = element_blank(),
+
+    ### LANCET AXIS STYLE ###
+    # Thick bottom axis line
+    axis.line.x = element_line(color = "black", size = 0.5),
+    # Thick left axis line
+    axis.line.y = element_line(color = "black", size = 0.5),
+
+    ### Tick marks ###
+    axis.ticks = element_line(color = "black", size = 1),
+    axis.ticks.length = unit(4, "pt"),   # length like the journal
+
+    ### Title centered ###
+    plot.title = element_text(hjust = 0.5, family = "Times", face = "bold")
+  )
+
+p_b
+
+ggsave("chart2.png", p_b, width = 3, height = 8, dpi = 300, units = "in")
+
+
+```
+
+
+```{r}
+# Replace these numbers with YOUR odds ratios & CIs
+chartc <- data.frame(
+  label = c("High income",
+            "High education",
+            "Urban",
+            "Under 30 years",
+            "Female"),
+  or  = c(1.396713,  
+          0.8932902,
+          0.9409201, 
+          0.5993923, 
+          0.8499973), 
+  lcl = c(1.190873,
+          0.7769974,
+          0.794019,
+          0.5170647,
+          0.7464385),
+  ucl = c(1.638134,
+          1.026989,
+          1.114999,
+          0.6948281,
+          0.9679235)
+)
+
+# make factor so they appear top-to-bottom like the Lancet figure
+chartc$label <- factor(chartc$label,
+                       levels = rev(chartc$label))
+
+
+p_c <- ggplot(chartc, aes(x = or, y = label)) +
+  geom_errorbarh(aes(xmin = lcl, xmax = ucl), height = 0.2, size = 0.5, color = "#9B6CC0") +
+  geom_point(size = 2, shape = 23, fill = "#9B6CC0", color = "#9B6CC0", stroke = 0) +
+  geom_vline(xintercept = 1, linetype = "dashed", size = 0.8) +
+  scale_x_log10(
+    breaks = c(0.5, 0.75, 1, 1.25, 1.5, 1.75),
+    limits = c(0.5, 1.75),
+    labels = c("0.50","0.75","1.0","1.25","1.50", "1.75"),
+    expand = c(0.02, 0.02)
+  ) +
+  labs(
+    x = "Odds ratio (95% CI)",
+    y = NULL,
+    title = "Confident that one can get and afford care"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    ### Text ###
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    axis.text.y = element_text(hjust = 1),
+
+    ### No grid ###
+    panel.grid = element_blank(),
+
+    ### LANCET AXIS STYLE ###
+    # Thick bottom axis line
+    axis.line.x = element_line(color = "black", size = 0.5),
+    # Thick left axis line
+    axis.line.y = element_line(color = "black", size = 0.5),
+
+    ### Tick marks ###
+    axis.ticks = element_line(color = "black", size = 1),
+    axis.ticks.length = unit(4, "pt"),   # length like the journal
+
+    ### Title centered ###
+    plot.title = element_text(hjust = 0.5, family = "Times", face = "bold")
+  )
+
+p_c
+
+ggsave("chart3.png", p_c, width = 5, height = 8, dpi = 300, units = "in")
+
+
+```
+
+
+```{r}
+# Replace these numbers with YOUR odds ratios & CIs
+chartd <- data.frame(
+  label = c("High income",
+            "High education",
+            "Urban",
+            "Under 30 years",
+            "Female"),
+  or  = c(0.6468983,  
+          0.5323886, 
+          0.9126063,  
+          1.140855,  
+          0.7881118), 
+  lcl = c(0.4981852,
+          0.4356867,
+          0.7101991,
+          0.9168288,
+          0.6492274),
+  ucl = c(0.8400836,
+          0.6505538,
+          1.171304,
+          1.419622,
+          0.9567867)
+)
+
+# make factor so they appear top-to-bottom like the Lancet figure
+chartd$label <- factor(chartd$label,
+                       levels = rev(chartd$label))
+
+
+p_d <- ggplot(chartd, aes(x = or, y = label)) +
+  geom_errorbarh(aes(xmin = lcl, xmax = ucl), height = 0.2, size = 0.5, color = "#9E2536") +
+  geom_point(size = 2, shape = 23, fill = "#9E2536", color = "#9E2536", stroke = 0) +
+  geom_vline(xintercept = 1, linetype = "dashed", size = 0.8) +
+  scale_x_log10(
+    breaks = c(0.4, 0.5, 0.75, 1, 1.25, 1.5),
+    limits = c(0.4, 1.5),
+    labels = c("0.4", "0.50","0.75","1.0","1.25","1.50"),
+    expand = c(0.02, 0.02)
+  ) +
+  labs(
+    x = "Odds ratio (95% CI)",
+    y = NULL,
+    title = "Health system getting better in past 2 years"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    ### Text ###
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    axis.text.y = element_blank(),
+
+    ### No grid ###
+    panel.grid = element_blank(),
+
+    ### LANCET AXIS STYLE ###
+    # Thick bottom axis line
+    axis.line.x = element_line(color = "black", size = 0.5),
+    # Thick left axis line
+    axis.line.y = element_line(color = "black", size = 0.5),
+
+    ### Tick marks ###
+    axis.ticks = element_line(color = "black", size = 1),
+    axis.ticks.length = unit(4, "pt"),   # length like the journal
+
+    ### Title centered ###
+    plot.title = element_text(hjust = 0.5, family = "Times", face = "bold")
+  )
+
+p_d
+
+ggsave("chart4.png", p_d, width = 3, height = 8, dpi = 300, units = "in")
+
+
+```
+
+
+
+```{r}
+# Replace these numbers with YOUR odds ratios & CIs
+charte <- data.frame(
+  label = c("High income-USA",
+            "High education-USA",
+            "Urban living-USA",
+            "Under 30 years-USA",
+            "Female-USA"),
+  or  = c(1.19758,  
+          0.7738121, 
+          0.9149692,  
+          0.615485,   
+          1.1692496), 
+  lcl = c(0.9826165,
+          0.6492882,
+          0.7370365,
+          0.5164422,
+          0.9963969),
+  ucl = c(1.45957,
+          0.9222178,
+          1.135858,
+          0.7335221,
+          1.372081)
+)
+
+# make factor so they appear top-to-bottom like the Lancet figure
+charte$label <- factor(charte$label,
+                       levels = rev(charte$label))
+
+
+p_e <- ggplot(charte, aes(x = or, y = label)) +
+  geom_errorbarh(aes(xmin = lcl, xmax = ucl), height = 0.2, size = 0.5, color = "#C4632B") +
+  geom_point(size = 2, shape = 23, fill = "#C4632B", color = "#C4632B", stroke = 0) +
+  geom_vline(xintercept = 1, linetype = "dashed", size = 0.8) +
+  scale_x_log10(
+    breaks = c(0.5, 0.75, 1, 1.25, 1.5),
+    limits = c(0.5, 1.5),
+    labels = c("0.50","0.75","1.0","1.25","1.50"),
+    expand = c(0.02, 0.02)
+  ) +
+  labs(
+    x = "Odds ratio (95% CI)",
+    y = NULL,
+    title = "Health system works well or only minor changes needed"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    ### Text ###
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    axis.text.y = element_blank(),
+
+    ### No grid ###
+    panel.grid = element_blank(),
+
+    ### LANCET AXIS STYLE ###
+    # Thick bottom axis line
+    axis.line.x = element_line(color = "black", size = 0.5),
+    # Thick left axis line
+    axis.line.y = element_line(color = "black", size = 0.5),
+
+    ### Tick marks ###
+    axis.ticks = element_line(color = "black", size = 1),
+    axis.ticks.length = unit(4, "pt"),   # length like the journal
+
+    ### Title centered ###
+    plot.title = element_text(hjust = 0.5, family = "Times", face = "bold")
+  )
+
+p_e
+
+ggsave("chart5.png", p_e, width = 3, height = 8, dpi = 300, units = "in")
+ggsave("chart5_1.png", p_e, width = 3, height = 8, dpi = 300, units = "in")
+
+
+```
+
+
+# now make bar charts
+```{r}
+df1 <- data.frame(
+  country = "USA",
+  metric = c("Can get good-quality care", 
+             "Can afford care when needed",
+             "Can get and afford care"),
+  value = c(85.20, 65.86, 62.63)
+)
+
+df1$metric <- factor(
+  df1$metric,
+  levels = c(
+    "Can get and afford care",
+    "Can afford care when needed",
+    "Can get good-quality care"
+  )
+)
+
+p_bar1 <- ggplot(df1, aes(x = value, y = metric, fill = metric)) +
+  geom_bar(stat = "identity", width = 0.85, color = "black") +
+  geom_text(aes(label = paste0(value, "%")), 
+            hjust = -0.2, family = "Times", size = 4) +
+
+  # Colors from Lancet figure
+  scale_fill_manual(values = c(
+    "Can get good-quality care" = "#E9DD8F",
+    "Can afford care when needed"   = "#BFD3AD",
+    "Can get and afford care" = "#AFC8DA"
+  )) +
+
+  scale_x_continuous(
+    limits = c(0,102),
+    breaks = seq(0,100,20),
+    expand = c(0,0)
+  ) +
+  scale_y_discrete(expand = c(0,0)) +   # Removes vertical gaps
+  labs(
+    y = NULL,
+    x = "Proportion of respondents feeling somewhat\nor very confident (%)",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 12),
+    axis.text.y = element_blank(),
+    
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+
+    # Axis style similar to Lancet
+    axis.line.x = element_line(color = "black", size = 0.8),
+    axis.line.y = element_line(color = "black", size = 0.8),
+    axis.ticks.x = element_line(color = "black", size = 0.8),
+    axis.ticks.y = element_line(color = "black", size = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5)
+  )
+
+p_bar1
+
+ggsave("chart6.png", p_bar1, width = 5, height = 2, dpi = 300, units = "in")
+
+```
+
+
+```{r}
+df1_wave1 <- data.frame(
+  country = "USA",
+  metric = c("Can get good-quality care", 
+             "Can afford care when needed",
+             "Can get and afford care"),
+  value = c(82.38, 61.86, 57.66)
+)
+
+df1_wave1$metric <- factor(
+  df1_wave1$metric,
+  levels = c(
+    "Can get and afford care",
+    "Can afford care when needed",
+    "Can get good-quality care"
+  )
+)
+
+p_bar1_wave1 <- ggplot(df1_wave1, aes(x = value, y = metric, fill = metric)) +
+  geom_bar(stat = "identity", width = 0.85, color = "black") +
+  geom_text(aes(label = paste0(value, "%")), 
+            hjust = -0.2, family = "Times", size = 4) +
+
+  # Colors from Lancet figure
+  scale_fill_manual(values = c(
+    "Can get good-quality care" = "#E9DD8F",
+    "Can afford care when needed"   = "#BFD3AD",
+    "Can get and afford care" = "#AFC8DA"
+  )) +
+
+  scale_x_continuous(
+    limits = c(0,102),
+    breaks = seq(0,100,20),
+    expand = c(0,0)
+  ) +
+  scale_y_discrete(expand = c(0,0)) +   # Removes vertical gaps
+  labs(
+    y = NULL,
+    x = "Proportion of respondents feeling somewhat\nor very confident (%)",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 12),
+    axis.text.y = element_blank(),
+    
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+
+    # Axis style similar to Lancet
+    axis.line.x = element_line(color = "black", size = 0.8),
+    axis.line.y = element_line(color = "black", size = 0.8),
+    axis.ticks.x = element_line(color = "black", size = 0.8),
+    axis.ticks.y = element_line(color = "black", size = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5)
+  )
+
+p_bar1_wave1
+
+ggsave("chart6_wave1.png", p_bar1_wave1, width = 5, height = 2, dpi = 300, units = "in")
+
+```
+
+
+
+
+
+
+
+
+```{r}
+df2 <- data.frame(
+  metric = "Improved in past 2 years",
+  value  = 11.52
+)
+
+p_bar2 <- ggplot(df2, aes(x = value, y = metric)) +
+  geom_bar(stat = "identity",
+           width = 0.7,
+           fill  = "#C9BEDF",      # soft lavender / purple
+           color = "black") +      # black border like Lancet
+  geom_text(aes(label = paste0(value, "%"), x = value + 8),
+            family = "Times",
+            size   = 5) +
+
+  scale_x_continuous(
+    limits = c(0, 100),
+    breaks = seq(0, 100, 20),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+  scale_y_discrete(expand = c(0, 0)) +
+
+  labs(
+    x = "Proportion of respondents stating the health system\nhas improved in the past 2 years (%)",
+    y = NULL,
+    title = NULL
+  ) +
+
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text.y  = element_blank(),      # no y-axis label
+    axis.title.y = element_blank(),
+
+    panel.grid = element_blank(),
+
+    # Lancet-like axes
+    axis.line.x = element_line(color = "black", linewidth = 0.8),
+    axis.line.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.x = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none"
+  )
+
+p_bar2
+
+ggsave("chart7.png", p_bar2, width = 5, height = 2, dpi = 300, units = "in")
+```
+
+
+
+
+```{r}
+df3 <- data.frame(
+  metric = "Minor change",
+  value  = 19.79
+)
+
+p_bar3 <- ggplot(df3, aes(x = value, y = metric)) +
+  geom_bar(stat = "identity",
+           width = 0.7,
+           fill  = "#AFC8DA",      # soft lavender / purple
+           color = "black") +      # black border like Lancet
+  geom_text(aes(label = paste0(value, "%"), x = value + 8),
+            family = "Times",
+            size   = 5) +
+
+  scale_x_continuous(
+    limits = c(0, 100),
+    breaks = seq(0, 100, 20),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+  scale_y_discrete(expand = c(0, 0)) +
+
+  labs(
+    x = "Proportion of respondents stating the health system \nworks well or only needs minor changes (%)",
+    y = NULL,
+    title = NULL
+  ) +
+
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text.y  = element_blank(),      # no y-axis label
+    axis.title.y = element_blank(),
+
+    panel.grid = element_blank(),
+
+    # Lancet-like axes
+    axis.line.x = element_line(color = "black", linewidth = 0.8),
+    axis.line.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.x = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none"
+  )
+
+p_bar3
+
+ggsave("chart8.png", p_bar3, width = 5, height = 2, dpi = 300, units = "in")
+```
+
+
+```{r}
+df4 <- data.frame(
+  country = "USA",
+  metric = c("Public", 
+             "Private"),
+  value = c(35.46, 53.66)
+)
+
+p_bar4 <- ggplot(df4, aes(x = value, y = metric, fill = metric)) +
+  geom_bar(stat = "identity", width = 0.85, color = "black") +
+  geom_text(aes(label = paste0(value, "%")), 
+            hjust = -0.2, family = "Times", size = 4) +
+
+  # Colors from Lancet figure
+  scale_fill_manual(values = c(
+    "Public" = "#007A4D",
+    "Private"   = "#99B94C"
+  )) +
+
+  scale_x_continuous(
+    limits = c(0,102),
+    breaks = seq(0,100,20),
+    expand = c(0,0)
+  ) +
+  scale_y_discrete(expand = c(0,0)) +   # Removes vertical gaps
+  labs(
+    y = NULL,
+    x = "Proportion of respondents stating\n\"very good\" or \"excellent\" (%)",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 12),
+    axis.text.y = element_blank(),
+    
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+
+    # Axis style similar to Lancet
+    axis.line.x = element_line(color = "black", size = 0.8),
+    axis.line.y = element_line(color = "black", size = 0.8),
+    axis.ticks.x = element_line(color = "black", size = 0.8),
+    axis.ticks.y = element_line(color = "black", size = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5)
+  )
+
+p_bar4
+
+ggsave("chart9.png", p_bar4, width = 5, height = 2, dpi = 300, units = "in")
+
+```
+
+
+```{r}
+df5 <- data.frame(
+  country = "USA",
+  metric = c("Maternity care", 
+             "Paediatric care",
+             "Care for chronic illness",
+             "Mental health care"),
+  value = c(62.50, 63.02, 58.00, 44.13)
+)
+
+df5$metric <- factor(
+  df5$metric,
+  levels = c(
+    "Mental health care",
+    "Care for chronic illness",
+    "Paediatric care",
+    "Maternity care"
+  )
+)
+
+
+p_bar5 <- ggplot(df5, aes(x = value, y = metric, fill = metric)) +
+  geom_bar(stat = "identity", width = 0.85, color = "black") +
+  geom_text(aes(label = paste0(value, "%")), 
+            hjust = -0.2, family = "Times", size = 4) +
+
+  # Colors from Lancet figure
+  scale_fill_manual(values = c(
+    "Maternity care" = "#6A4C8C",
+    "Paediatric care"   = "#8E6FB0",
+    "Care for chronic illness" = "#B59FD0",
+    "Mental health care" = "#DBCCE9"
+  )) +
+
+  scale_x_continuous(
+    limits = c(0,102),
+    breaks = seq(0,100,20),
+    expand = c(0,0)
+  ) +
+  scale_y_discrete(expand = c(0,0)) +   # Removes vertical gaps
+  labs(
+    y = NULL,
+    x = "Proportion of respondents stating\n\"very good\" or \"excellent\" (%)",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text = element_text(family = "Times", size = 12),
+    axis.text.y = element_blank(),
+    
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+
+    # Axis style similar to Lancet
+    axis.line.x = element_line(color = "black", size = 0.8),
+    axis.line.y = element_line(color = "black", size = 0.8),
+    axis.ticks.x = element_line(color = "black", size = 0.8),
+    axis.ticks.y = element_line(color = "black", size = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5)
+  )
+
+p_bar5
+
+ggsave("chart10.png", p_bar5, width = 5, height = 2, dpi = 300, units = "in")
+
+```
+
+
+```{r}
+df6 <- data.frame(
+  metric = "Government's responsiveness to public input",
+  value  = 33.18
+)
+
+p_bar6 <- ggplot(df6, aes(x = value, y = metric)) +
+  geom_bar(stat = "identity",
+           width = 0.7,
+           fill  = "#9FB3D0",    
+           color = "black") +   
+  geom_text(aes(label = paste0(value, "%"), x = value + 8),
+            family = "Times",
+            size   = 5) +
+
+  scale_x_continuous(
+    limits = c(0, 100),
+    breaks = seq(0, 100, 20),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+  scale_y_discrete(expand = c(0, 0)) +
+
+  labs(
+    x = "Proportion of respondents feeling \nsomewhat or very confident (%)",
+    y = NULL,
+    title = NULL
+  ) +
+
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text.y  = element_blank(),      # no y-axis label
+    axis.title.y = element_blank(),
+
+    panel.grid = element_blank(),
+
+    # Lancet-like axes
+    axis.line.x = element_line(color = "black", linewidth = 0.8),
+    axis.line.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.x = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none"
+  )
+
+p_bar6
+
+ggsave("chart11.png", p_bar6, width = 5, height = 2, dpi = 300, units = "in")
+```
+
+
+
+```{r}
+df7 <- data.frame(
+  metric = "Government's COVID-19 management",
+  value  = 19.54
+)
+
+p_bar7 <- ggplot(df7, aes(x = value, y = metric)) +
+  geom_bar(stat = "identity",
+           width = 0.7,
+           fill  = "#EAB39B",
+           color = "black") +  
+  geom_text(aes(label = paste0(value, "%"), x = value + 8),
+            family = "Times",
+            size   = 5) +
+
+  scale_x_continuous(
+    limits = c(0, 100),
+    breaks = seq(0, 100, 20),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+  scale_y_discrete(expand = c(0, 0)) +
+
+  labs(
+    x = "Proportion of respondents stating\n\"very good\" or \"excellent\" (%)",
+    y = NULL,
+    title = NULL
+  ) +
+
+  theme_minimal(base_size = 12) +
+  theme(
+    text = element_text(family = "Times"),
+    axis.text.y  = element_blank(),      # no y-axis label
+    axis.title.y = element_blank(),
+
+    panel.grid = element_blank(),
+
+    # Lancet-like axes
+    axis.line.x = element_line(color = "black", linewidth = 0.8),
+    axis.line.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.x = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.y = element_line(color = "black", linewidth = 0.8),
+    axis.ticks.length.x = unit(4, "pt"),
+
+    legend.position = "none"
+  )
+
+p_bar7
+
+ggsave("chart12.png", p_bar7, width = 5, height = 2, dpi = 300, units = "in")
+```
+
+
+```{r}
+# install.packages(c("sf", "rnaturalearth", "rnaturalearthdata"))
+
+library(sf)
+library(rnaturalearth)
+library(ggplot2)
+library(dplyr)
+
+
+# 1. Your countries
+countries_to_highlight <- c(
+  "Argentina","Belgium","China","Egypt","Ethiopia","Finland","Germany","Ghana",
+  "Honduras","India","Italy","Japan","Kenya","Latvia","Mexico","Nepal",
+  "Nigeria","Norway","Peru","Romania","Senegal","Singapore","Switzerland",
+  "United States","United Kingdom", "Taiwan"
+)
+
+# 2. Define income groups for those countries
+# (These are just example groupings – replace with whatever classification you want,
+# e.g. World Bank income groups.)
+income_df <- tibble::tibble(
+  country = countries_to_highlight,
+  income_group = dplyr::case_when(
+    country %in% c(
+      "Belgium","Finland","Germany","Italy","Japan","Latvia",
+      "Norway","Singapore","Switzerland","United States","United Kingdom"
+    ) ~ "HIC",
+    country %in% c("Argentina","China","Taiwan","Mexico","Romania","Egypt","Ghana","Honduras","India","Kenya","Nigeria",
+      "Peru","Senegal","Ethiopia","Nepal") ~ "LMIC",
+    TRUE ~ NA_character_
+  )
+)
+
+# 3. Get world map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# 4. Create a join name that matches your vector (handle USA name)
+world <- world %>%
+  mutate(
+    join_name = dplyr::case_when(
+      admin == "United States of America" ~ "United States",
+      TRUE ~ admin
+    )
+  )
+
+# 5. Join income info onto the world map
+world_income <- world %>%
+  left_join(income_df, by = c("join_name" = "country"))
+
+# 6. Plot: base world in grey, highlighted countries colored by income group
+ggplot() +
+  geom_sf(data = world_income, fill = "grey90", color = "grey70", size = 0.1) +
+  geom_sf(
+    data = subset(world_income, !is.na(income_group)),
+    aes(fill = income_group),
+    color = "grey20",
+    size = 0.2
+  ) +
+  scale_fill_manual(
+    values = c(
+      "HIC" = "steelblue",
+      "LMIC" = "#91bfdb"
+    )
+  ) +
+  guides(fill = guide_legend(title = " ")) +
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(size = 10),
+    legend.text  = element_text(size = 9)
+  )
+```
+
+
