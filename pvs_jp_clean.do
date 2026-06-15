@@ -159,7 +159,12 @@ recode q10 (999 = .a)
 lab def q10_label 0 "Poor" 1 "Fair" 2 "Good" 3 "Very good" 4 "Excellent" .a "NA"
 lab val q10 q10_label
 
-* q11 (chronic health) - collapse the 16 condition items into a single yes/no
+* q11 (longstanding illness) - collapse the 16 condition items into a single yes/no
+* CAVEAT: this composite does NOT bit-for-bit reproduce the q11 column in the
+* current pvs_jp.dta (~167/2000 rows differ, in both directions). The stored q11
+* is not a function of these Q12-matrix items in this Excel, so it appears to
+* have been built from a standalone longstanding-illness question / source not
+* present in this export. Confirm the intended q11 definition before relying on it.
 foreach v of varlist q11a_jp q11b_jp q11c_jp q11d_jp q11e_jp q11f_jp q11g_jp q11h_jp q11i_jp q11j_jp q11k_jp q11l_jp q11m_jp q11n_jp q11o_jp q11p_jp {
     replace `v' = .a if `v' == 999
 }
@@ -224,10 +229,11 @@ recode q18 (998 = .d) (999 = .a)
 lab def q18_label .d "Don't know" .a "NA"
 lab val q18 q18_label
 
-* q19 (categorized # of visits)
+* q19 (categorized # of visits) - shift codes down by 1 (1-4 -> 0-3) to match output
 replace q19 = .a if q19 == .
 recode q19 (999 = .)
-lab def q19_label 1 "0" 2 "1-4" 3 "5-9" 4 "10 or more" .a "NA"
+recode q19 (1 = 0) (2 = 1) (3 = 2) (4 = 3)
+lab def q19_label 0 "0" 1 "1-4" 2 "5-9" 3 "10 or more" .a "NA" .r "Refused"
 lab val q19 q19_label
 
 * q20 (same or different facility)
@@ -446,10 +452,10 @@ local q15l q15_label
 local q33l q33_label
 local q50l q50_label
 local q51l q51_label
-local q52l q52_label
-local q53l q53_label
+* NOTE: q52a_jp and q53a_jp are intentionally NOT shifted to 8000+ (the stored
+* pvs_jp.dta keeps them on their native 1-11 codes with q52_label / q53_label).
 
-foreach q in q4 q5 q7 q8 q15 q33 q50 q51 q52a_jp q53a_jp {
+foreach q in q4 q5 q7 q8 q15 q33 q50 q51 {
 
     * 1) SHIFT the values to 8000+ (do not touch missing values)
     replace `q' = 8000 + `q' if `q' < .
